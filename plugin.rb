@@ -6,23 +6,25 @@
 
 module ::WatchCategory
   def self.watch_category!
-    mcneel_private_category = Category.find_by_slug("mcneel-private")
-    mcneel_group = Group.find_by_name("mcneel")
 
-    unless mcneel_private_category.nil? || mcneel_group.nil?
-      mcneel_group.users.each do |user|
+    eresources_category = Category.find_by_slug("e-resources-committee")
+    eresources_group = Group.find_by_name("eresources")
+
+    unless eresources_category.nil? || eresources_group.nil?
+      eresources_group.users.each do |user|
         watched_categories = CategoryUser.lookup(user, :watching).pluck(:category_id)
-        CategoryUser.set_notification_level_for_category(user, CategoryUser.notification_levels[:watching], mcneel_private_category.id) unless watched_categories.include?(mcneel_private_category.id)
+        CategoryUser.set_notification_level_for_category(user, CategoryUser.notification_levels[:watching], eresources_category.id) unless watched_categories.include?(eresources_category.id)
       end
     end
 
-    reseller_category = Category.find_by_slug("resellers")
-    reseller_group = Group.find_by_name("resellers")
-    return if reseller_category.nil? || reseller_group.nil?
+    digped_category = Category.find_by_slug("digital-pedagogy-committee")
+    digped_group = Group.find_by_name("digped")
 
-    reseller_group.users.each do |user|
+    return if digped_category.nil? || digped_group.nil?
+
+    digped_group.users.each do |user|
       watched_categories = CategoryUser.lookup(user, :watching).pluck(:category_id)
-      CategoryUser.set_notification_level_for_category(user, CategoryUser.notification_levels[:watching], reseller_category.id) unless watched_categories.include?(reseller_category.id)
+      CategoryUser.set_notification_level_for_category(user, CategoryUser.notification_levels[:watching], digped_category.id) unless watched_categories.include?(digped_category.id)
     end
   end
 end
