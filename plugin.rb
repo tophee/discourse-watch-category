@@ -8,15 +8,20 @@ module ::WatchCategory
 
   def self.watch_category!
     groups_cats = {
-      "digped" => ["digital-pedagogy-committee", "digital-pedagogy"],
-      "eresources" => ["e-resources-committee", "meta", "libraries/e-resources"],
+      "digped" => ["digital-pedagogy-committee", ["teaching", "digital-pedagogy"] ],
+      "eresources" => ["e-resources-committee", "meta", ["libraries", "e-resources"] ],
       "everyone" => ["general"]
     }
 
     groups_cats.each do |group_name, cats|
       cats.each do |cat_slug|
 
-        category = Category.find_by_slug(cat_slug)
+        # If a category is an array, we assume the first value is the category and the sceond is the sub-category
+        if cat_slug.respond_to?(:each)
+          category = Category.find_by_slug(cat_slug[1], cat_slug[0])
+        else
+          category = Category.find_by_slug(cat_slug)
+        end
         group = Group.find_by_name(group_name)
 
         unless category.nil? || group.nil?
