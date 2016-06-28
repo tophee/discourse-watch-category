@@ -6,23 +6,36 @@
 
 module ::WatchCategory
 
-  def self.watch_by_group(category_slug, group_name)
-    category = Category.find_by_slug(category_slug)
-    group = Group.find_by_name(group_name)
-
-    return if category.nil? || group.nil?
-
-    group.users.each do |user|
-      watched_categories = CategoryUser.lookup(user, :watching).pluck(:category_id)
-      CategoryUser.set_notification_level_for_category(user, CategoryUser.notification_levels[:watching], category.id) unless watched_categories.include?(category.id)
-      # Jared Needell's code
-      # CategoryUser.set_notification_level_for_category(user, CategoryUser.notification_levels[:watching], category.id) unless watched_categories.include?(category.id) || user.staged
-    end
-  end
-
   def self.watch_category!
-    WatchCategory.watch_by_group("digital-pedagogy-committee", "digped")
-    WatchCategory.watch_by_group("e-resources-committee", "eresources")
+    groups_cats = {
+      "digped" => ["digital-pedagogy-committee", "digital-pedagogy"],
+      "eresources" => ["e-resources-committee", "meta", "libraries/e-resources"],
+      "everyone" => ["general"]
+    }
+
+    groups_cats.each do |group_name, cats|
+      cats.each do |cat_slug|
+
+        category = Category.find_by_slug(cat_slug)
+        group = Group.find_by_name(group_name)
+
+        unless category.nil? || group.nil?
+          if group_name == "everyone"
+            User.all.each do |user|
+              watched_categories = CategoryUser.lookup(user, :watching).pluck(:category_id)
+              CategoryUser.set_notification_level_for_category(user, CategoryUser.notification_levels[:watching], category.id) unless watched_categories.include?(category.id)  || user.staged
+            end
+          else
+            group.users.each do |user|
+              watched_categories = CategoryUser.lookup(user, :watching).pluck(:category_id)
+              CategoryUser.set_notification_level_for_category(user, CategoryUser.notification_levels[:watching], category.id) unless watched_categories.include?(category.id)
+            end
+          end
+        end
+
+      end
+    end
+
   end
 end
 
