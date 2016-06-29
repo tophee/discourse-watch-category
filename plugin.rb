@@ -1,6 +1,6 @@
 # name: Watch Category
 # about: Watches a category for all the users in a particular group
-# version: 0.2
+# version: 0.3
 # authors: Arpit Jalan
 # url: https://github.com/discourse/discourse-watch-category-mcneel
 
@@ -8,15 +8,17 @@ module ::WatchCategory
 
   def self.watch_category!
     groups_cats = {
+      # "group" => ["category", "another-top-level-category", ["parent-category", "sub-category"] ],
       "digped" => ["digital-pedagogy-committee", ["teaching", "digital-pedagogy"] ],
       "eresources" => ["e-resources-committee", "meta", ["libraries", "e-resources"] ],
+      # "everyone" makes every user watch the listed categories
       "everyone" => ["general"]
     }
 
     groups_cats.each do |group_name, cats|
       cats.each do |cat_slug|
 
-        # If a category is an array, we assume the first value is the category and the sceond is the sub-category
+        # If a category is an array, the first value is treated as the top-level category and the second as the sub-category
         if cat_slug.respond_to?(:each)
           category = Category.find_by_slug(cat_slug[1], cat_slug[0])
         else
@@ -47,8 +49,6 @@ end
 after_initialize do
   module ::WatchCategory
     class WatchCategoryJob < ::Jobs::Scheduled
-      # every 1.day
-      # every 1.minute
       every 6.hours
 
       def execute(args)
