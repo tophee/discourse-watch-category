@@ -9,8 +9,10 @@ module ::WatchCategory
   def self.watch_category!
     groups_cats = {
       # "group" => ["category", "another-top-level-category", ["parent-category", "sub-category"] ],
-      "digped-comm" => ["digital-pedagogy-committee", ["teaching", "digital-pedagogy"] ],
-      "eresources-comm" => ["e-resources-committee", ["libraries", "e-resources"] ],
+      "digped-cmte" => [ "digital-pedagogy-committee", ["teaching", "digital-pedagogy"] ],
+      "eresources-cmte" => [ "e-resources-committee", ["libraries", "e-resources"] ],
+      "digcol-cmte" => [ "digital-collections-committee" ],
+      "lib-buyers" => [ ["libraries", "buyers-group"] ],
       # "everyone" makes every user watch the listed categories
       "everyone" => ["announcements"]
     }
