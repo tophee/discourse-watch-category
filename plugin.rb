@@ -10,11 +10,11 @@ module ::WatchCategory
     groups_cats = {
       # "group" => ["category", "another-top-level-category", ["parent-category", "sub-category"] ],
       "digped-cmte" => [ "digital-pedagogy-committee", ["teaching", "digital-pedagogy"] ],
-      "eresources-cmte" => [ "e-resources-committee", ["libraries", "e-resources"] ],
+      "eresources-cmte" => [ "e-resources-committee", ["libraries", "e-resources"], ["libraries", "buyers-group"] ],
       "digcol-cmte" => [ "digital-collections-committee" ],
       "lib-buyers" => [ ["libraries", "buyers-group"] ],
       # "everyone" makes every user watch the listed categories
-      "everyone" => ["announcements"]
+      "everyone" => [ "announcements" ]
     }
 
     groups_cats.each do |group_name, cats|
