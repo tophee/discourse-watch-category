@@ -19,8 +19,9 @@ module ::WatchCategory
       "oclc-cmte" => [ ["closed-groups", "oclc-programs-committee"] ],
       "profdev-cmte" => [ ["closed-groups", "professional-development-committee"] ],
       "lib-buyers" => [ ["libraries", "buyers-group"] ],
+      "chairs" => [ ["closed-groups", "chairs"] ]
       # "everyone" makes every user watch the listed categories
-      "everyone" => [ "announcements" ]
+      # "everyone" => [ "announcements" ]
     }
 
     groups_cats.each do |group_name, cats|
