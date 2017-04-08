@@ -1,6 +1,6 @@
 # name: Watch Category
 # about: Watches a category for all the users in a particular group
-# version: 0.3
+# version: 0.4
 # authors: Arpit Jalan
 # url: https://github.com/discourse/discourse-watch-category-mcneel
 
@@ -9,21 +9,15 @@ module ::WatchCategory
   def self.watch_category!
     groups_cats = {
       # "group" => ["category", "another-top-level-category", ["parent-category", "sub-category"] ],
-      "coordinating-cmte" => [ ["closed-groups", "coordinating-committee"] ],
-      "digcol-cmte" => [ ["closed-groups", "digital-collections-committee"] ],
-      "digped-cmte" => [ ["closed-groups", "digital-pedagogy-committee"] ],
-      "digschol-cmte" => [ ["closed-groups", "digital-scholarship-committee"] ],
-      "eresources-cmte" => [ ["closed-groups", "e-resources-committee"], ["libraries", "buyers-group"] ],
-      "infolit-cmte" => [ ["closed-groups", "information-literacy-committee"] ],
-      "inst-research-cmte" => [ ["closed-groups", "institutional-research-assessment-committee"] ],
-      "oclc-cmte" => [ ["closed-groups", "oclc-programs-committee"] ],
-      "profdev-cmte" => [ ["closed-groups", "professional-development-committee"] ],
-      "lib-buyers" => [ ["libraries", "buyers-group"] ],
-      "chairs" => [ ["closed-groups", "chairs"] ]
+      "GMSS.registered" => [ ["Research", "Symposium Logistics"], ["Research", "Symposium"] ],
+      "GMSS.interested" => [ ["Research", "Symposium"] ],
       # "everyone" makes every user watch the listed categories
       # "everyone" => [ "announcements" ]
     }
 
+    # levels: :watching :watching_first_post etc.
+    level = :watching_first_post
+    
     groups_cats.each do |group_name, cats|
       cats.each do |cat_slug|
 
@@ -39,12 +33,12 @@ module ::WatchCategory
           if group_name == "everyone"
             User.all.each do |user|
               watched_categories = CategoryUser.lookup(user, :watching).pluck(:category_id)
-              CategoryUser.set_notification_level_for_category(user, CategoryUser.notification_levels[:watching], category.id) unless watched_categories.include?(category.id)
+              CategoryUser.set_notification_level_for_category(user, CategoryUser.notification_levels[level], category.id) unless watched_categories.include?(category.id)
             end
           else
             group.users.each do |user|
               watched_categories = CategoryUser.lookup(user, :watching).pluck(:category_id)
-              CategoryUser.set_notification_level_for_category(user, CategoryUser.notification_levels[:watching], category.id) unless watched_categories.include?(category.id)
+              CategoryUser.set_notification_level_for_category(user, CategoryUser.notification_levels[level], category.id) unless watched_categories.include?(category.id)
             end
           end
         end
