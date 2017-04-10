@@ -16,7 +16,7 @@ module ::WatchCategory
     }
     
     # levels: :watching :watching_first_post etc.
-    level = :watching_first_post
+    # level = :watching_first_post
     
     groups_cats.each do |group_name, cats|
       cats.each do |cat_slug|
@@ -32,13 +32,13 @@ module ::WatchCategory
         unless category.nil? || group.nil?
           if group_name == "everyone"
             User.all.each do |user|
-              watched_categories = CategoryUser.lookup(user, level).pluck(:category_id)
-              CategoryUser.set_notification_level_for_category(user, CategoryUser.notification_levels[level], category.id) unless watched_categories.include?(category.id)
+              watched_categories = CategoryUser.lookup(user, :watching_first_post).pluck(:category_id)
+              CategoryUser.set_notification_level_for_category(user, CategoryUser.notification_levels[:watching_first_post], category.id) unless watched_categories.include?(category.id)
             end
           else
             group.users.each do |user|
-              watched_categories = CategoryUser.lookup(user, level).pluck(:category_id)
-              CategoryUser.set_notification_level_for_category(user, CategoryUser.notification_levels[level], category.id) unless watched_categories.include?(category.id)
+              watched_categories = CategoryUser.lookup(user, :watching_first_post).pluck(:category_id)
+              CategoryUser.set_notification_level_for_category(user, CategoryUser.notification_levels[:watching_first_post], category.id) unless watched_categories.include?(category.id)
             end
           end
         end
